@@ -1,0 +1,24 @@
+{
+  "name": "lit-gigwidget",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "chordjs": "^2.0.1",
+    "chordsheetjs": "^10.3.0",
+    "dexie": "^4.0.8",
+    "idb": "^8.0.0",
+    "lit": "^3.2.0",
+    "native-file-system-adapter": "^3.0.1",
+    "svguitar": "^2.2.2"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.3",
+    "vite": "^5.4.1"
+  }
+}
