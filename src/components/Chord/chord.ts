@@ -75,7 +75,7 @@ export class ChordDiagram extends LitElement {
 
     return html`
 		<div class='chord chart'>
-      <span>${this.chord.replace(/(maj)$/, '')} (${this.instrument})</span>
+      <span>${this.chord.replace(/(maj)$/, '')}</span>
       <div class='diagram'>${divEl.firstChild}</div>  
     </div>
     `

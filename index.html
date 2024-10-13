@@ -7,23 +7,16 @@
     <title>Vite + Lit + TS</title>
     <link rel="stylesheet" href="./src/index.css" />
     <script type="module" src="/src/components/Chord/chord.ts"></script>
+    <script type="module" src="/src/components/ChordList/chord-list.ts"></script>
   </head>
   <body>
-    <div>
-      <chord-diagram chord="C7"></chord-diagram>
-      <chord-diagram chord="C7" instrument="Standard Guitar"></chord-diagram>
-      <chord-diagram chord="C7" instrument="Standard Mandolin"></chord-diagram>
-      <chord-diagram chord="C7" instrument="5ths tuned Ukulele"></chord-diagram>
-      <chord-diagram chord="C7" instrument="Baritone Ukulele"></chord-diagram>
-      <chord-diagram chord="C7" instrument="Drop-D Guitar"></chord-diagram>  
-    </div>
-    <div>
-      <chord-diagram chord="Gmin"></chord-diagram>
-      <chord-diagram chord="Gmin" instrument="Standard Guitar"></chord-diagram>
-      <chord-diagram chord="Gmin" instrument="Standard Mandolin"></chord-diagram>
-      <chord-diagram chord="Gmin" instrument="5ths tuned Ukulele"></chord-diagram>
-      <chord-diagram chord="Gmin" instrument="Baritone Ukulele"></chord-diagram>
-      <chord-diagram chord="Gmin" instrument="Drop-D Guitar"></chord-diagram>  
-    </div>
+    <chord-list instrument="Standard Ukulele"></chord-list>
+    <chord-list instrument="Baritone Ukulele"></chord-list>
+    <chord-list instrument="Standard Guitar"></chord-list>
+    <chord-list instrument="Standard Mandolin"></chord-list>
+    <script>
+      const chordListEls = document.querySelectorAll("chord-list");
+      chordListEls.forEach(chordList=>chordList.chords = ["F#min", "D", "A", "G"]);
+    </script>
   </body>
 </html>
