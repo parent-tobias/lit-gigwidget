@@ -2,7 +2,7 @@ import { LitElement, css, html } from 'lit';
 import { customElement, property, query } from 'lit/decorators.js';
 
 // given an instrument and a chord, we should be able to generate a chord chart dynamically.
-import { keys, instruments, chordOnInstrument, chordToNotes } from "../../services/music/musicUtils";
+import { instruments, chordOnInstrument, chordToNotes } from "../../services/music/musicUtils";
 import { systemDefaultChords } from "../../services/music/systemDefaultChords";
 
 import { SVGuitarChord } from "svguitar";
@@ -33,12 +33,11 @@ export class ChordDiagram extends LitElement {
 	chord='';
 
 	@query('.diagram')
-	container?: HTMLDivElement;
+	container;
 
   render() {
+			const instrumentObject = instruments.find(({name})=>name===this.instrument);
 
-			const instrumentObject = instruments.find(({name})=>name===this.instrument)
-	
 			const chordFinder = chordOnInstrument(
 				instrumentObject
 			);
@@ -53,7 +52,7 @@ export class ChordDiagram extends LitElement {
 				systemDefaultChords[this.instrument][this.chord] : 
 				{
 					barres: [],
-					fingers: chordFinder(chordObject) 
+					fingers: chordFinder(chordObject) || []
 				};
 	
 			let maxFrets = Math.max(...chartSettings.fingers.map(([,fret])=>fret) );

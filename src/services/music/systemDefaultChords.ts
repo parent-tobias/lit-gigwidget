@@ -1,4 +1,24 @@
-export const systemDefaultChords = {
+interface Dictionary<T> {
+  [key: string]: T
+}
+
+type Barre = {
+  fromString: number
+  toString: number
+  fret: number
+  text?: string
+}
+type InstrumentString = number[]
+
+type InstrumentDefault = {
+  barres: Barre[]
+  fingers: InstrumentString[]
+}
+
+
+type Instrument = Dictionary<InstrumentDefault>
+
+export const systemDefaultChords: Dictionary<Instrument> = {
   "Standard Ukulele": {
     "Cm": {
       "barres": [],

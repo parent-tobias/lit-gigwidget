@@ -1,4 +1,32 @@
-export const keys = [
+type Key = {
+	key: string
+	accidental: string
+	relativeMinor: string
+}
+type Chord = {
+	variant: string
+	tones: number[]
+}
+type Scale = {
+	variant: string
+	tones: number[]
+}
+type ChordsByScale = {
+	variant: string
+	chords: string[]
+}
+type Instrument = {
+	name: string
+	strings: string[]
+	frets: number
+}
+type ChordDescriptor = {
+	key: string
+	chord: string
+	alt: string 
+}
+
+export const keys: Key[] = [
   {key: "A", accidental: "#", relativeMinor: 'F#'},
   {key: "A#", accidental: "#", relativeMinor: 'G'},
   {key: "Bb", accidental: 'b', relativeMinor: 'G'},
@@ -17,7 +45,7 @@ export const keys = [
   {key: "G#", accidental: "#", relativeMinor: 'F'},
   {key: "Ab", accidental: "b", relativeMinor: 'F'}
 ];
-export const notes = [
+export const notes: string[][] = [
   ["A"],
   ["A#", "Bb"],
   ["B"],
@@ -31,7 +59,7 @@ export const notes = [
   ["G"],
   ["G#", "Ab"]
 ];
-export const chords = [
+export const chords: Chord[] = [
   { variant: "maj",  tones: [0, 4, 7] },
   { variant: "m",    tones: [0, 3, 7]},
   { variant: "min",  tones: [0, 3, 7] },
@@ -61,18 +89,18 @@ export const chords = [
   { variant: "add9", tones: [0, 4, 7, 14]},
   { variant: "mAdd9", tones: [0, 3, 7, 14]}
 ];
-export const scales = [
+export const scales: Scale[] = [
   { variant: "major", tones: [0, 2, 4, 5, 7, 9, 11] },
   { variant: "minor", tones: [0, 2, 3, 5, 7, 8, 10] },
   { variant: "major pentatonic", tones: [0, 2, 4, 7, 9] },
   { variant: "minor pentatonic", tones: [0, 3, 5, 7, 10] },
   { variant: "blues", tones: [0, 3, 5, 6, 7, 10] }
 ];
-export const chordsPerScale = [
+export const chordsPerScale: ChordsByScale[] = [
   {variant: 'major', chords: ['maj','min','min','maj','maj','min','dim']},
   {variant: 'minor', chords: ['min','dim','maj','min','min','maj','maj']}
 ]
-export const instruments = [
+export const instruments: Instrument[] = [
   { name: 'Standard Ukulele', strings: ["G","C","E","A"], frets: 19},
   { name: 'Baritone Ukulele', strings: ["D","G","B","E"], frets: 19},
   { name: '5ths tuned Ukulele', strings: ["C","G","D","A"], frets: 19},
@@ -89,7 +117,7 @@ const keyChordRegex = /\[([A-Ga-g](?:#|b)?)(m|min|maj|aug|dim|7|m7|maj7|aug7|dim
  *   inline.This function will give us a Map containing each of the unique
  *   instances of those chords.
  *****/
-export const parseChords = (string)=>{
+export const parseChords = (string:string):Map<string,ChordDescriptor>=>{
   const chordMap = new Map();
   // turn the `matchAll` set into an actual array
   [...string.matchAll(keyChordRegex)]
@@ -113,17 +141,16 @@ export const parseChords = (string)=>{
  *   in the chord on a given string, which may or may not define the complete chord. How to
  *   weight for completeness?
  *****/
-export const chordOnInstrument = (instrument) =>
-  (chord) => {
-
-    if(!chord) return;
+export const chordOnInstrument = (instrument:Instrument | undefined) =>
+  (chord: {notes:string[]|undefined }|undefined) => {
+    if(!instrument || !chord ) return;
     
     const {strings} = instrument;
     return [...strings].reverse().map((note, index)=>{
       let fret = 0;
       let baseIndex = findBase(note);
       let noteNames = notes[baseIndex];
-      while(noteNames.every(noteName=>!chord.notes.includes(noteName))){
+      while(noteNames.every(noteName=>!chord?.notes?.includes(noteName))){
         ++fret;
         noteNames = notes[(fret+baseIndex)%notes.length];
       }
@@ -135,17 +162,17 @@ export const chordOnInstrument = (instrument) =>
  * Quick way of indexing a given note to a scale index. Thus `C` returns 3, while
  * both `C#` and `Db` return 4. 
  *****/
-export const findBase = (note)=>notes.findIndex((tone)=> tone.includes(note) )
+export const findBase = (note:string):number=>notes.findIndex((tone)=> tone.includes(note) )
 
-export const chordToNotes = (chordName) => {  
+export const chordToNotes = (chordName:string):{name: string, notes: string[]|undefined} => {  
   const chordData = Array.from(parseChords(`[${chordName}]`));
 
-  if(!chordData || !chordData.length) return;
+  if(!chordData || !chordData.length) return {name:'', notes: []};
 
   const [,{key, chord, alt}] = chordData[0];
   const {accidental} = keys.find(
     (keySignature)=>keySignature.key===key
-  );
+  ) ?? {accidental:''};
   const baseIndex = findBase(key);
   return ({
     name: `${key}${chord?chord: ''}${alt?alt:''}`,
@@ -153,20 +180,20 @@ export const chordToNotes = (chordName) => {
         notes[(tone + baseIndex) % notes.length]
         .find((note, _, arr) => arr.length > 1 && accidental ?
           note.endsWith(accidental) :
-          arr[0])
+          arr[0])!
         )
   })
 }
 
-export const scaleTones = (base, variant) =>{
+export const scaleTones = (base:string, variant:string) =>{
   // given a base note, and a variant (major/minor/?), we can return the tones
   //  in a given scale.
   const baseIndex = findBase(base);
   const {accidental} = keys.find(
     (keySignature)=>keySignature.key===base
-  );
-  const noteNames = scales.find(({variant: variantName})=>variantName===variant)
-    .tones.map(
+  ) ?? {accidental: ''};
+  const noteNames = scales.find(({variant: variantName}: {variant: string})=>variantName===variant)
+    ?.tones.map(
       (interval)=>notes[(interval+baseIndex)%notes.length]
       .find((note, _, arr) => arr.length > 1 && accidental ?
           note.endsWith(accidental) :
