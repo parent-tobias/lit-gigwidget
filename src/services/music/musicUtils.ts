@@ -1,4 +1,4 @@
-import { Chord, Finger, Barre } from 'svguitar';
+import { Finger } from 'svguitar';
 
 type MuKey = {
 	key: string

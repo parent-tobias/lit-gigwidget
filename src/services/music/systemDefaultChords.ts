@@ -1,4 +1,4 @@
-import { Chord, Finger, Barre} from 'svguitar';
+import { Finger, Barre} from 'svguitar';
 
 interface Dictionary<T> {
   [key: string]: T

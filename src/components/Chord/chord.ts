@@ -5,7 +5,7 @@ import { customElement, property, query } from 'lit/decorators.js';
 import { instruments, chordOnInstrument, chordToNotes } from "../../services/music/musicUtils";
 import { systemDefaultChords } from "../../services/music/systemDefaultChords";
 
-import { SVGuitarChord, Chord, Finger, Barre} from 'svguitar';
+import { SVGuitarChord} from 'svguitar';
 
 
 @customElement('chord-diagram')
