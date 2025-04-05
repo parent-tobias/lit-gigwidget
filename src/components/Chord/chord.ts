@@ -5,7 +5,7 @@ import { customElement, property, query } from 'lit/decorators.js';
 import { instruments, chordOnInstrument, chordToNotes } from "../../services/music/musicUtils";
 import { systemDefaultChords } from "../../services/music/systemDefaultChords";
 
-import { SVGuitarChord } from "svguitar";
+import { SVGuitarChord, Chord, Finger, Barre} from 'svguitar';
 
 
 @customElement('chord-diagram')
@@ -14,8 +14,8 @@ export class ChordDiagram extends LitElement {
 	static styles = css`
 	:host {
 		display: inline-block;
+		width: 100px;
 		border: 1px solid silver;
-		width: 25%;
 		box-sizing: border-box;
 	}
 	.diagram {
@@ -33,10 +33,10 @@ export class ChordDiagram extends LitElement {
 	chord='';
 
 	@query('.diagram')
-	container;
+	container?:HTMLElement;
 
   render() {
-			const instrumentObject = instruments.find(({name})=>name===this.instrument);
+			const instrumentObject = instruments.find(({name})=>name===this.instrument) ?? {name: 'None', strings: [], frets: 0};
 
 			const chordFinder = chordOnInstrument(
 				instrumentObject
@@ -55,11 +55,13 @@ export class ChordDiagram extends LitElement {
 					fingers: chordFinder(chordObject) || []
 				};
 	
-			let maxFrets = Math.max(...chartSettings.fingers.map(([,fret])=>fret) );
-			maxFrets = maxFrets >=4 ? maxFrets : 4;
+				let arrayOfFrets:number[] = chartSettings.fingers.map( ([,fret]):number=>typeof fret==='number'? fret : Infinity);
+
+				let maxFrets = Math.max(...arrayOfFrets );
+				maxFrets = maxFrets >=4 ? maxFrets : 4;
 	
 			let divEl = document.createElement("div");
-	
+
 			const chart = new SVGuitarChord(divEl);
 			chart
 				.configure({

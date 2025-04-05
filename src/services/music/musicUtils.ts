@@ -1,32 +1,34 @@
-type Key = {
+import { Chord, Finger, Barre } from 'svguitar';
+
+type MuKey = {
 	key: string
 	accidental: string
 	relativeMinor: string
 }
-type Chord = {
+type MuChord = {
 	variant: string
 	tones: number[]
 }
-type Scale = {
+type MuScale = {
 	variant: string
 	tones: number[]
 }
-type ChordsByScale = {
+type MuChordsByScale = {
 	variant: string
 	chords: string[]
 }
-type Instrument = {
+type MuInstrument = {
 	name: string
 	strings: string[]
 	frets: number
 }
-type ChordDescriptor = {
+type MuChordDescriptor = {
 	key: string
 	chord: string
 	alt: string 
 }
 
-export const keys: Key[] = [
+export const keys: MuKey[] = [
   {key: "A", accidental: "#", relativeMinor: 'F#'},
   {key: "A#", accidental: "#", relativeMinor: 'G'},
   {key: "Bb", accidental: 'b', relativeMinor: 'G'},
@@ -59,7 +61,7 @@ export const notes: string[][] = [
   ["G"],
   ["G#", "Ab"]
 ];
-export const chords: Chord[] = [
+export const chords: MuChord[] = [
   { variant: "maj",  tones: [0, 4, 7] },
   { variant: "m",    tones: [0, 3, 7]},
   { variant: "min",  tones: [0, 3, 7] },
@@ -89,18 +91,18 @@ export const chords: Chord[] = [
   { variant: "add9", tones: [0, 4, 7, 14]},
   { variant: "mAdd9", tones: [0, 3, 7, 14]}
 ];
-export const scales: Scale[] = [
+export const scales: MuScale[] = [
   { variant: "major", tones: [0, 2, 4, 5, 7, 9, 11] },
   { variant: "minor", tones: [0, 2, 3, 5, 7, 8, 10] },
   { variant: "major pentatonic", tones: [0, 2, 4, 7, 9] },
   { variant: "minor pentatonic", tones: [0, 3, 5, 7, 10] },
   { variant: "blues", tones: [0, 3, 5, 6, 7, 10] }
 ];
-export const chordsPerScale: ChordsByScale[] = [
+export const chordsPerScale: MuChordsByScale[] = [
   {variant: 'major', chords: ['maj','min','min','maj','maj','min','dim']},
   {variant: 'minor', chords: ['min','dim','maj','min','min','maj','maj']}
 ]
-export const instruments: Instrument[] = [
+export const instruments: MuInstrument[] = [
   { name: 'Standard Ukulele', strings: ["G","C","E","A"], frets: 19},
   { name: 'Baritone Ukulele', strings: ["D","G","B","E"], frets: 19},
   { name: '5ths tuned Ukulele', strings: ["C","G","D","A"], frets: 19},
@@ -117,7 +119,7 @@ const keyChordRegex = /\[([A-Ga-g](?:#|b)?)(m|min|maj|aug|dim|7|m7|maj7|aug7|dim
  *   inline.This function will give us a Map containing each of the unique
  *   instances of those chords.
  *****/
-export const parseChords = (string:string):Map<string,ChordDescriptor>=>{
+export const parseChords = (string:string):Map<string,MuChordDescriptor>=>{
   const chordMap = new Map();
   // turn the `matchAll` set into an actual array
   [...string.matchAll(keyChordRegex)]
@@ -141,8 +143,8 @@ export const parseChords = (string:string):Map<string,ChordDescriptor>=>{
  *   in the chord on a given string, which may or may not define the complete chord. How to
  *   weight for completeness?
  *****/
-export const chordOnInstrument = (instrument:Instrument | undefined) =>
-  (chord: {notes:string[]|undefined }|undefined) => {
+export const chordOnInstrument = (instrument:MuInstrument | undefined) =>
+  (chord: {notes:string[]|undefined }|undefined):Finger[]|undefined => {
     if(!instrument || !chord ) return;
     
     const {strings} = instrument;

@@ -15,8 +15,9 @@
     <chord-list instrument="Standard Guitar"></chord-list>
     <chord-list instrument="Standard Mandolin"></chord-list>
     <script>
+      // We can simply apply the same set of chords, as an array, to each `chord-list` as an attribute! 
       const chordListEls = document.querySelectorAll("chord-list");
-      chordListEls.forEach(chordList=>chordList.chords = ["F#min", "D", "A", "G"]);
+      chordListEls.forEach(chordList=>chordList.chords = ["F#min", "D", "A", "G", "C7"]);
     </script>
   </body>
 </html>

@@ -23,10 +23,10 @@ body {
   min-width: 320px;
   min-height: 100vh;
 }
-body > div {
-  width: 48vw;
-}
 
+chord-list {
+  width: 60vw;
+}
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;

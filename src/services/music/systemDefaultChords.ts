@@ -1,18 +1,20 @@
+import { Chord, Finger, Barre} from 'svguitar';
+
 interface Dictionary<T> {
   [key: string]: T
 }
 
-type Barre = {
-  fromString: number
-  toString: number
-  fret: number
-  text?: string
-}
-type InstrumentString = number[]
+// type Barre = {
+//   fromString: number
+//   toString: number
+//   fret: number
+//   text?: string
+// }
+// type InstrumentString = number[]
 
 type InstrumentDefault = {
   barres: Barre[]
-  fingers: InstrumentString[]
+  fingers: Finger[]
 }
 
 
