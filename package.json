@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@lit/context": "^1.1.5",
     "chordjs": "^2.0.1",
     "chordsheetjs": "^10.3.0",
     "dexie": "^4.0.8",
